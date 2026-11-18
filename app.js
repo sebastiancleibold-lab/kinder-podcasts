@@ -450,6 +450,7 @@ function renderPlayer() {
   const wrap = h('div', { class: 'player' + (withEps ? ' with-eps' : '') },
     cover,
     h('div', { class: 'progress' }, bar),
+    h('div', { class: 'time' }, h('span', { id: 'tPlayed' }), h('span', { id: 'tLeft' })),
     ctr,
     h('div', { class: 'ep-title' }, ep ? ep.title : (player.loading ? '' : 'Gerade keine Folgen gefunden.')));
 
@@ -483,6 +484,21 @@ function updatePlayerUi() {
     const d = audio.duration;
     bar.style.width = isFinite(d) && d > 0 ? `${Math.min(100, (audio.currentTime / d) * 100)}%` : '0%';
   }
+  const played = document.getElementById('tPlayed');
+  const left = document.getElementById('tLeft');
+  if (played && left) {
+    const d = audio.duration;
+    const ok = isFinite(d) && d > 0;
+    played.textContent = ok ? fmtTime(audio.currentTime) : '';
+    left.textContent = ok ? `noch ${fmtTime(Math.max(0, d - audio.currentTime))}` : '';
+  }
+}
+
+function fmtTime(sec) {
+  sec = Math.floor(sec);
+  const hh = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+  const mm = hh ? String(m).padStart(2, '0') : String(m);
+  return (hh ? hh + ':' : '') + mm + ':' + String(s).padStart(2, '0');
 }
 
 audio.addEventListener('play', () => {

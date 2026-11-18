@@ -1,5 +1,5 @@
 // Service Worker: hält die App selbst und die Coverbilder offline bereit.
-const VERSION = 'hoerhaus-v2';
+const VERSION = 'hoerhaus-v3';
 const SHELL = ['./', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 const IMG_CACHE = 'hoerhaus-img';

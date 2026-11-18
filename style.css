@@ -213,8 +213,9 @@ img { -webkit-user-drag: none; }
   background: rgba(255,255,255,.35);
   animation: pulse 1.2s ease-in-out infinite;
 }
-.player.with-eps .cover, .player.with-eps .progress { width: min(72vw, 34dvh); }
-.player.with-eps .progress { margin: 20px 0 18px; }
+.player.with-eps .cover, .player.with-eps .progress, .player.with-eps .time { width: min(72vw, 34dvh); }
+.player.with-eps .progress { margin: 20px 0 0; }
+.player.with-eps .time { margin: 6px 0 12px; }
 
 @keyframes pulse { 50% { opacity: .2; } }
 
@@ -223,8 +224,19 @@ img { -webkit-user-drag: none; }
   height: 14px;
   border-radius: 7px;
   background: var(--line);
-  margin: 28px 0 24px;
+  margin: 28px 0 0;
   overflow: hidden;
+}
+.time {
+  width: min(82vw, 42dvh);
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0 18px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--quiet);
+  font-variant-numeric: tabular-nums;
+  min-height: 20px;
 }
 .progress > div {
   height: 100%;
