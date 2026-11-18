@@ -5,7 +5,7 @@ Eine einfache Web-App, mit der kleine Kinder ihre Lieblings-Podcasts selbst star
 - Reine statische Web-App (HTML, CSS, JavaScript), kein Server, kein Konto.
 - Podcasts und Folgen kommen aus dem öffentlichen Apple-Podcast-Verzeichnis (`itunes.apple.com`).
 - Namen, Fotos, Favoriten und Hörstand liegen nur im Browser des Geräts (localStorage).
-- Elternbereich: Zahnrad unten rechts 3 Sekunden halten, dann Rechenaufgabe lösen.
+- Elternbereich: Zahnrad unten rechts 3 Sekunden halten oder 5-mal schnell antippen, dann Rechenaufgabe lösen.
 
 ## Aufs iPhone
 

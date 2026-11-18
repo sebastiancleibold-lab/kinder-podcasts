@@ -207,7 +207,7 @@ function renderHome() {
   setKidColor(null);
   if (!state.kids.length) {
     app.append(h('div', { class: 'empty-home' },
-      h('div', {}, 'Noch keine Kinder angelegt.', h('br'), 'Zahnrad unten rechts 3 Sekunden gedrückt halten.')));
+      h('div', {}, 'Noch keine Kinder angelegt.', h('br'), 'Zahnrad unten rechts 3 Sekunden halten oder 5-mal tippen.')));
   } else {
     const wrap = h('div', { class: 'home' });
     for (const kid of state.kids) {
@@ -222,19 +222,30 @@ function renderHome() {
 }
 
 function parentGate() {
+  // Zwei Wege: 3 Sekunden gedrückt halten ODER 5-mal schnell tippen.
+  // Touch- und Maus-Events getrennt, weil iOS Pointer-Events bei langem Drücken abbricht.
   const ring = '<svg class="ring" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20"/></svg>';
-  const btn = h('button', { class: 'gear', 'aria-label': 'Elternbereich (gedrückt halten)', html: ICON.gear + ring });
+  const btn = h('div', { class: 'gear', role: 'button', 'aria-label': 'Elternbereich (gedrückt halten)', html: ICON.gear + ring });
   let timer = null;
+  let taps = [];
+  const open = () => { stop(); taps = []; askParent(); };
   const start = e => {
-    e.preventDefault();
+    if (e.cancelable) e.preventDefault();
+    clearTimeout(timer);
     btn.classList.add('holding');
-    timer = setTimeout(() => { btn.classList.remove('holding'); askParent(); }, 3000);
+    timer = setTimeout(open, 3000);
+    const now = Date.now();
+    taps = taps.filter(t => now - t < 2500);
+    taps.push(now);
+    if (taps.length >= 5) open();
   };
   const stop = () => { btn.classList.remove('holding'); clearTimeout(timer); };
-  btn.addEventListener('pointerdown', start);
-  btn.addEventListener('pointerup', stop);
-  btn.addEventListener('pointerleave', stop);
-  btn.addEventListener('pointercancel', stop);
+  btn.addEventListener('touchstart', start, { passive: false });
+  btn.addEventListener('touchend', stop);
+  btn.addEventListener('touchcancel', stop);
+  btn.addEventListener('mousedown', start);
+  btn.addEventListener('mouseup', stop);
+  btn.addEventListener('mouseleave', stop);
   btn.addEventListener('contextmenu', e => e.preventDefault());
   return btn;
 }
@@ -579,7 +590,7 @@ function renderParent() {
     '<b>Lautstärke begrenzen:</b> Das geht bei Web-Apps nicht in der App selbst. Für Kopfhörer: Einstellungen › Töne & Haptik › Kopfhörersicherheit › Laute Töne reduzieren.' }));
 
   root.append(h('h2', {}, 'Sicherung'));
-  const importInput = h('input', { type: 'file', accept: 'application/json,.json', style: 'display:none', onchange: e => importBackup(e.target.files[0]) });
+  const importInput = h('input', { type: 'file', style: 'display:none', onchange: e => importBackup(e.target.files[0]) });
   root.append(h('div', { class: 'card' },
     h('p', { class: 'sub' }, 'Alle Einstellungen, Fotos und der Hörstand liegen nur auf diesem Gerät. Mit einer Sicherung kannst du sie auf ein anderes Gerät mitnehmen.'),
     h('div', { style: 'display:flex;gap:8px;flex-wrap:wrap' },
